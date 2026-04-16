@@ -2430,7 +2430,16 @@ class GRPOTrainer(_BaseTrainer):
         completion_ids, completion_mask = inputs["completion_ids"], inputs["completion_mask"]
         input_ids = torch.cat([prompt_ids, completion_ids], dim=1)
         print (f'Input ids shape: {input_ids.shape}')
+
+        # pad input_ids and attention_mask for SRM sequence parallel forward pass
+        sequence_length = 1024
+        pad_size = sequence_length - input_ids.shape[1]
+        pad_tokens = torch.ones((input_ids.shape[0], pad_size), dtype=torch.long).to(prompt_ids.device)
+        pad_attention = torch.zeros((input_ids.shape[0], pad_size), dtype=torch.long).to(prompt_ids.device)
+        input_ids = torch.cat([pad_tokens, input_ids], dim=1)
         attention_mask = torch.cat([prompt_mask, completion_mask], dim=1)
+        attention_mask = torch.cat([pad_attention, attention_mask], dim=1)
+
         logits_to_keep = completion_ids.size(1)  # we only need to compute the logits for the completion tokens
         mask = completion_mask if "tool_mask" not in inputs else completion_mask * inputs["tool_mask"]
 
