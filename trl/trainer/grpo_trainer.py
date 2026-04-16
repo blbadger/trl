@@ -1088,15 +1088,15 @@ class GRPOTrainer(_BaseTrainer):
             model_inputs["use_cache"] = False  # only used in generation; set False to suppress warnings
 
             # pad inputs if necessary
-            input_ids = model_inputs["input_ids"]
-            print (f'preprocessed inputs shape: {input_ids.shape}') 
-            if input_ids.shape[1] < 1024:
-                pad_size = 1024-input_ids.shape[1]
-                pad_tokens = torch.ones((input_ids.shape[0], pad_size), dtype=torch.long).to(input_ids.device)
-                input_ids = torch.cat((pad_tokens, input_ids), dim=1)
+            these_input_ids = model_inputs["input_ids"]
+            print (f'preprocessed inputs shape: {these_input_ids.shape}') 
+            if these_input_ids.shape[1] < 1024:
+                pad_size = 1024-these_input_ids.shape[1]
+                pad_tokens = torch.ones((these_input_ids.shape[0], pad_size), dtype=torch.long).to(these_input_ids.device)
+                these_input_ids = torch.cat((pad_tokens, these_input_ids), dim=1)
 
-            print (f'model inputs shape: {input_ids.shape}') 
-            model_inputs['input_ids'] = input_ids
+            print (f'model inputs shape: {these_input_ids.shape}') 
+            model_inputs['input_ids'] = these_input_ids
 
             logits = model(**model_inputs).logits
             print (f'logits shape: {logits.shape}')
