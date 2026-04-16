@@ -2440,8 +2440,10 @@ class GRPOTrainer(_BaseTrainer):
         attention_mask = torch.cat([prompt_mask, completion_mask], dim=1)
         attention_mask = torch.cat([pad_attention, attention_mask], dim=1)
 
+
         logits_to_keep = completion_ids.size(1)  # we only need to compute the logits for the completion tokens
         mask = completion_mask if "tool_mask" not in inputs else completion_mask * inputs["tool_mask"]
+        print (input_ids.shape, attention_mask.shape, logits_to_keep)
 
         # Compute the per_token_logps and the entropy at each position in the completion
         per_token_logps, entropies = self._get_per_token_logps_and_entropies(
