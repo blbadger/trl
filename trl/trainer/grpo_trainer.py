@@ -1088,6 +1088,8 @@ class GRPOTrainer(_BaseTrainer):
             model_inputs["use_cache"] = False  # only used in generation; set False to suppress warnings
 
             logits = model(**model_inputs).logits
+            if logits.dim() > 3:
+                logits = logits.squeeze(1)
             # Exclude the last value: it corresponds to the next token pred
             logits = logits[:, :-1, :]  # (B, L-1, H)
             # Only keep the last logits_to_keep. For model that support logits_to_keep, this is a no-op.
