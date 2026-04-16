@@ -1089,18 +1089,14 @@ class GRPOTrainer(_BaseTrainer):
 
             # pad inputs if necessary
             these_input_ids = model_inputs["input_ids"]
-            print (f'preprocessed inputs shape: {these_input_ids.shape}') 
             if these_input_ids.shape[1] < 1024:
                 pad_size = 1024-these_input_ids.shape[1]
                 pad_tokens = torch.ones((these_input_ids.shape[0], pad_size), dtype=torch.long).to(these_input_ids.device)
                 these_input_ids = torch.cat((pad_tokens, these_input_ids), dim=1)
 
-            print (f'model inputs shape: {these_input_ids.shape}') 
             model_inputs['input_ids'] = these_input_ids
 
             logits = model(**model_inputs).logits
-            print (f'logits shape: {logits.shape}')
-
             # expects [b, t, e]
             if logits.dim() > 3:
                 logits = logits.squeeze(1)
@@ -2445,7 +2441,6 @@ class GRPOTrainer(_BaseTrainer):
         prompt_ids, prompt_mask = inputs["prompt_ids"], inputs["prompt_mask"]
         completion_ids, completion_mask = inputs["completion_ids"], inputs["completion_mask"]
         input_ids = torch.cat([prompt_ids, completion_ids], dim=1)
-        print (f"input ids shape: {input_ids.shape}")
 
         # pad input_ids and attention_mask for SRM sequence parallel forward pass
         sequence_length = 1024
