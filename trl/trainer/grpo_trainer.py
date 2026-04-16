@@ -1095,6 +1095,7 @@ class GRPOTrainer(_BaseTrainer):
                 input_ids = torch.cat((pad_tokens, input_ids), dim=1)
 
             print (f'model inputs shape: {input_ids.shape}')
+            model_inputs['input_ids'] = input_ids
 
             logits = model(**model_inputs).logits
             print (f'logits shape: {logits.shape}')
