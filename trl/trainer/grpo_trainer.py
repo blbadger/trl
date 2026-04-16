@@ -1395,9 +1395,12 @@ class GRPOTrainer(_BaseTrainer):
                 torch.no_grad(),
                 FSDP.summon_full_params(self.model_wrapped, recurse=False) if self.is_fsdp_enabled else nullcontext(),
             ):
+                unwrapped_model.clear_cache()
                 prompt_completion_ids = unwrapped_model.generate(
                     **generate_inputs, generation_config=self.generation_config
                 )
+                unwrapped_model.clear_cache()
+                
             # Compute prompt length and extract completion ids
             prompt_length = generate_inputs["input_ids"].size(1)
             completion_ids = prompt_completion_ids[:, prompt_length:]
