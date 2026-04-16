@@ -1098,7 +1098,6 @@ class GRPOTrainer(_BaseTrainer):
             # See https://huggingface.co/blog/the_n_implementation_details_of_rlhf_with_ppo#policy-training-implementation-details
             logits.div_(self.temperature)
             completion_ids = input_ids_batch[:, -logits_to_keep:]
-            print (f'log softmax input: {logits.shape}, {completion_ids.shape}')
             logps = selective_log_softmax(logits, completion_ids)  # compute logprobs
             all_logps.append(logps)
 
@@ -2432,7 +2431,6 @@ class GRPOTrainer(_BaseTrainer):
         prompt_ids, prompt_mask = inputs["prompt_ids"], inputs["prompt_mask"]
         completion_ids, completion_mask = inputs["completion_ids"], inputs["completion_mask"]
         input_ids = torch.cat([prompt_ids, completion_ids], dim=1)
-        print (f'Input ids shape: {input_ids.shape}')
 
         # pad input_ids and attention_mask for SRM sequence parallel forward pass
         sequence_length = 1024
@@ -2446,7 +2444,6 @@ class GRPOTrainer(_BaseTrainer):
 
         logits_to_keep = completion_ids.size(1)  # we only need to compute the logits for the completion tokens
         mask = completion_mask if "tool_mask" not in inputs else completion_mask * inputs["tool_mask"]
-        print (input_ids.shape, attention_mask.shape, logits_to_keep)
 
         # Compute the per_token_logps and the entropy at each position in the completion
         per_token_logps, entropies = self._get_per_token_logps_and_entropies(
