@@ -1097,6 +1097,9 @@ class GRPOTrainer(_BaseTrainer):
             print (f'model inputs shape: {input_ids.shape}')
 
             logits = model(**model_inputs).logits
+            print (f'logits shape: {logits.shape}')
+
+            # expects [b, t, e]
             if logits.dim() > 3:
                 logits = logits.squeeze(1)
             # Exclude the last value: it corresponds to the next token pred
