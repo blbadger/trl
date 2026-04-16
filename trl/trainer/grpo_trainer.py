@@ -1096,6 +1096,7 @@ class GRPOTrainer(_BaseTrainer):
             # See https://huggingface.co/blog/the_n_implementation_details_of_rlhf_with_ppo#policy-training-implementation-details
             logits.div_(self.temperature)
             completion_ids = input_ids_batch[:, -logits_to_keep:]
+            print (f'log softmax input: {logits.shape}, {completion_ids.shape}')
             logps = selective_log_softmax(logits, completion_ids)  # compute logprobs
             all_logps.append(logps)
 
