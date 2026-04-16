@@ -1087,7 +1087,9 @@ class GRPOTrainer(_BaseTrainer):
 
             model_inputs["use_cache"] = False  # only used in generation; set False to suppress warnings
 
-            print (f"model inputs shape{model_inputs['input_ids'].shape}")
+            input_ids = model_inputs["input_ids"] 
+            print (f'model inputs shape: {input_ids.shape}')
+            
             logits = model(**model_inputs).logits
             if logits.dim() > 3:
                 logits = logits.squeeze(1)
