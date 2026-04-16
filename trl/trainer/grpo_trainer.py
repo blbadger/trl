@@ -1089,12 +1089,13 @@ class GRPOTrainer(_BaseTrainer):
 
             # pad inputs if necessary
             input_ids = model_inputs["input_ids"]
+            print (f'preprocessed inputs shape: {input_ids.shape}') 
             if input_ids.shape[1] < 1024:
                 pad_size = 1024-input_ids.shape[1]
                 pad_tokens = torch.ones((input_ids.shape[0], pad_size), dtype=torch.long).to(input_ids.device)
                 input_ids = torch.cat((pad_tokens, input_ids), dim=1)
 
-            print (f'model inputs shape: {input_ids.shape}')
+            print (f'model inputs shape: {input_ids.shape}') 
             model_inputs['input_ids'] = input_ids
 
             logits = model(**model_inputs).logits
